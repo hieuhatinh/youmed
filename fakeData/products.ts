@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable no-trailing-spaces */
 
-import { IProduct } from '../utilities/interfaces/product';
+import {IProduct} from '../utilities/interfaces/product';
 
 export const listProduct: IProduct[] = [
     {
@@ -64,8 +63,8 @@ export const listProduct: IProduct[] = [
 export const productsCart = [
     {
         id: '1',
-        store: 'YouMed Store', 
-        products: [
+        store: 'YouMed Store',
+        data: [
             {
                 id: '1',
                 uri: 'https://kemembe.com/wp-content/themes/yootheme/cache/69/18-1-691508c5.png',
@@ -92,8 +91,8 @@ export const productsCart = [
     },
     {
         id: '2',
-        store: 'Bwell Official Store', 
-        products: [
+        store: 'Bwell Official Store',
+        data: [
             {
                 id: '1',
                 uri: 'https://kemembe.com/wp-content/themes/yootheme/cache/69/18-1-691508c5.png',

@@ -1,28 +1,21 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {Animated, StyleSheet, View} from 'react-native';
+import {Animated, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 
 import stylesGlobal from '../../assets/styles/global';
 import {transmissionText} from '../../sliceReducer/storeSlice';
 import {useDispatch} from 'react-redux';
-import {Text} from 'react-native';
 
 interface IPropsHeaderProductDetail {
     title: string;
+    opacity: any;
     scrollY: any;
 }
 
 const HeaderProductDetail = (props: IPropsHeaderProductDetail) => {
     const {title, scrollY} = props;
-
-    // opacity Header
-    const opacity = scrollY.interpolate({
-        inputRange: [0, 200],
-        outputRange: [0, 1],
-        extrapolate: 'clamp',
-    });
 
     const navigation = useNavigation<any>();
     const dispatch = useDispatch<any>();
@@ -36,54 +29,107 @@ const HeaderProductDetail = (props: IPropsHeaderProductDetail) => {
         dispatch(transmissionText('Giỏ hàng'));
     };
 
+    // chỉnh màu cho header và button
+    const showTitle = scrollY.interpolate({
+        inputRange: [0, 60],
+        outputRange: [0, 1],
+        extrapolate: 'clamp',
+    });
+
+    const iconBackgroundColor = scrollY.interpolate({
+        inputRange: [0, 60],
+        outputRange: ['#ccc', 'transparent'],
+        extrapolate: 'clamp',
+    });
+
+    const headerBackground = scrollY.interpolate({
+        inputRange: [0, 60],
+        outputRange: ['transparent', '#fff'],
+        extrapolate: 'clamp',
+    });
+
     return (
         <Animated.View
             style={StyleSheet.flatten([
-                stylesGlobal.headerHigh,
+                stylesGlobal.headerHeight,
                 styles.container,
-                {opacity},
+                {backgroundColor: headerBackground},
             ])}>
-            <Icon
-                name="chevron-left"
-                size={25}
-                style={StyleSheet.flatten([
-                    stylesGlobal.colorPrimary,
-                    {paddingHorizontal: 10},
-                ])}
-                onPress={handleGoBack}
-            />
-            <Text numberOfLines={1} style={styles.text}>
-                Sữa bột FontActiv Complete - Dinh dưỡng cho người ốm yếu và mệt
-                mỏi
-            </Text>
-            <Icon
-                name="cart-outline"
-                size={25}
-                style={StyleSheet.flatten([
-                    stylesGlobal.colorPrimary,
-                    {paddingHorizontal: 10},
-                ])}
-                onPress={handlePressCart}
-            />
+            <TouchableOpacity activeOpacity={0.9} onPress={handleGoBack}>
+                <Animated.View
+                    style={StyleSheet.flatten([
+                        {
+                            backgroundColor: iconBackgroundColor,
+                        },
+                        styles.icon,
+                    ])}>
+                    <Icon
+                        name="chevron-left"
+                        size={25}
+                        onPress={handleGoBack}
+                        style={StyleSheet.flatten([
+                            stylesGlobal.colorPrimary,
+                            styles.iconTransparentHeader,
+                        ])}
+                    />
+                </Animated.View>
+            </TouchableOpacity>
+            <Animated.Text
+                style={StyleSheet.flatten([styles.text, {opacity: showTitle}])}
+                numberOfLines={1}>
+                {title}
+            </Animated.Text>
+            <TouchableOpacity activeOpacity={0.9} onPress={handlePressCart}>
+                <Animated.View
+                    style={StyleSheet.flatten([
+                        {
+                            backgroundColor: iconBackgroundColor,
+                        },
+                        styles.icon,
+                    ])}>
+                    <Icon
+                        name="cart-outline"
+                        size={25}
+                        style={StyleSheet.flatten([
+                            stylesGlobal.colorPrimary,
+                            styles.iconTransparentHeader,
+                        ])}
+                    />
+                </Animated.View>
+            </TouchableOpacity>
         </Animated.View>
     );
 };
 
-// const AnimatedHeaderBackground =
-//     Animated.createAnimatedComponent(HeaderProductDetail);
-
 const styles = StyleSheet.create({
     container: {
-        // backgroundColor: 'white',
+        backgroundColor: 'white',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row',
         width: '100%',
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        paddingHorizontal: 10,
     },
     text: {
         flex: 1,
         color: '#111111',
+    },
+    iconTransparentHeader: {
+        textAlign: 'center',
+    },
+    icon: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        padding: 4,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 

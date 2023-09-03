@@ -1,12 +1,12 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable eol-last */
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 const stylesGlobal = StyleSheet.create({
     centerSpaceBetween: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     center: {
         display: 'flex',
@@ -17,25 +17,25 @@ const stylesGlobal = StyleSheet.create({
         backgroundColor: 'white',
     },
     backgroundColorPrimary: {
-      backgroundColor: '#0066FF',
+        backgroundColor: '#0066FF',
     },
     colorPrimary: {
-      color: '#0066FF',
+        color: '#0066FF',
     },
     textColor: {
-      color: '#111111',
+        color: '#111111',
     },
     textColorSecondary: {
-      color: '#444444',
+        color: '#444444',
     },
-    headerHigh: {
-      height: 60,
+    headerHeight: {
+        height: 60,
     },
     paddingPrimary: {
         padding: 10,
     },
     sectionMargin: {
-      marginTop: 8,
+        marginTop: 8,
     },
-  });
+});
 export default stylesGlobal;

@@ -3,10 +3,10 @@
 import React from 'react';
 import {Text, StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import stylesGlobal from '../../assets/styles/global';
-import Divider from '../Divider';
+import stylesGlobal from '../../../assets/styles/global';
+import Divider from '../../Divider';
 
-const ReviewProduct = () => {
+const ReviewProductItem = () => {
     return (
         <View style={styles.component}>
             <View style={{minHeight: 100}}>
@@ -89,4 +89,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ReviewProduct;
+export default ReviewProductItem;

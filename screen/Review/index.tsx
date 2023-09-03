@@ -2,7 +2,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, ScrollView, Text, StyleSheet} from 'react-native';
-import ReviewProduct from '../../component/ProductDetail/ReviewProduct';
+import ReviewProduct from '../../component/ProductDetail/Review/ReviewProductItem';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import stylesGlobal from '../../assets/styles/global';

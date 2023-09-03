@@ -1,89 +1,92 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useRef} from 'react';
 import {
     View,
     Text,
     StyleSheet,
     ScrollView,
-    TouchableOpacity,
     SafeAreaView,
+    TouchableOpacity,
 } from 'react-native';
-// import {SafeAreaView} from 'react-native-safe-area-context';
+import {SwipeListView} from 'react-native-swipe-list-view';
 
 import CardProduct from '../../component/Cart/CardProduct';
 import stylesGlobal from '../../assets/styles/global';
-import Divider from '../../component/Divider';
 import {productsCart} from '../../fakeData/products';
+import Bottom from '../../component/Cart/Bottom';
 
 const CartScreen = () => {
+    const swipeRowRef = useRef<any>(null);
+
+    const onRowDidOpen = () => {
+        // close the row after 1 second
+        setTimeout(() => {
+            swipeRowRef.current.closeRow();
+        }, 1000);
+    };
+
+    const handlePressDelete = (rowMap, idItem) => {};
+
     return (
         <SafeAreaView>
             <ScrollView
                 style={{
-                    backgroundColor: 'white',
-                    position: 'relative',
-                    bottom: 45,
-                    top: 0,
+                    marginBottom: 10,
                 }}
-                showsVerticalScrollIndicator={false}>
-                {productsCart.map(item => (
-                    <View
-                        key={item.id}
-                        style={{
-                            backgroundColor: 'white',
-                            marginHorizontal: 10,
-                        }}>
-                        <Text
-                            style={StyleSheet.flatten([
-                                styles.textStore,
-                                stylesGlobal.textColor,
-                            ])}>
-                            {item.store}
-                        </Text>
-                        <Divider />
-                        {item.products.map(product => (
-                            <CardProduct key={product.id} product={product} />
-                        ))}
-                    </View>
-                ))}
-            </ScrollView>
-            <View style={styles.viewBottom}>
-                <View style={styles.viewSumPrice}>
-                    <View style={styles.priceBottom}>
-                        <Text>Tổng thanh toán</Text>
-                        <Text
-                            style={StyleSheet.flatten([
-                                stylesGlobal.colorPrimary,
-                                styles.price,
-                            ])}>
-                            5.995.000đ
-                        </Text>
-                    </View>
-                    <View
-                        style={StyleSheet.flatten([
-                            styles.priceBottom,
-                            {marginTop: 5},
-                        ])}>
-                        <Text>Tổng giảm giá</Text>
-                        <Text
-                            style={StyleSheet.flatten([
-                                {color: '#FFCC00'},
-                                styles.price,
-                            ])}>
-                            -15.000đ
-                        </Text>
-                    </View>
+                showsVerticalScrollIndicator={false}
+                nestedScrollEnabled={true}>
+                <View style={{marginBottom: 80, backgroundColor: 'white'}}>
+                    <SwipeListView
+                        useSectionList
+                        sections={productsCart}
+                        renderSectionHeader={({section: {store}}) => (
+                            <Text
+                                style={StyleSheet.flatten([
+                                    styles.textStore,
+                                    stylesGlobal.textColor,
+                                ])}>
+                                {store}
+                            </Text>
+                        )}
+                        renderItem={(data: any, rowMap: any) => (
+                            <CardProduct product={data.item} />
+                        )}
+                        renderHiddenItem={(rowData, rowMap) => (
+                            <TouchableOpacity
+                                activeOpacity={0.9}
+                                style={styles.deleteButton}
+                                onPress={() =>
+                                    handlePressDelete(rowMap, rowData.item)
+                                }>
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                        color: 'white',
+                                        fontSize: 16,
+                                    }}>
+                                    Xoá
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+                        onRowOpen={(secId: any, rowId: any, rowMap: any) => {
+                            setTimeout(() => {
+                                rowMap[`${secId}${rowId}`].closeRow();
+                            }, 3000);
+                        }}
+                        rightOpenValue={-80}
+                        disableRightSwipe
+                        scrollEnabled={false}
+                        previewRowKey={'0'}
+                        previewOpenValue={0}
+                        previewOpenDelay={3000}
+                        nestedScrollEnabled
+                    />
                 </View>
-                <TouchableOpacity
-                    activeOpacity={0.9}
-                    style={StyleSheet.flatten([
-                        stylesGlobal.backgroundColorPrimary,
-                        styles.buttonBuy,
-                    ])}>
-                    <Text style={styles.textButton}>Mua hàng</Text>
-                </TouchableOpacity>
-            </View>
+            </ScrollView>
+
+            {/* Bottom */}
+            <Bottom />
         </SafeAreaView>
     );
 };
@@ -94,6 +97,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingTop: 10,
         fontWeight: '500',
+        width: '100%',
+        marginBottom: 10,
     },
     viewBottom: {
         position: 'absolute',
@@ -103,8 +108,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         display: 'flex',
         flexDirection: 'row',
-        // paddingBottom: 20,
+        paddingBottom: 20,
         marginTop: 10,
+        height: 80,
+        zIndex: 1,
+        borderWidth: 0.25,
+        borderColor: '#ccc',
     },
     viewSumPrice: {
         display: 'flex',
@@ -132,6 +141,28 @@ const styles = StyleSheet.create({
         top: '-50%',
         transform: [{translateY: 50}],
         fontWeight: '500',
+    },
+    // bottom sheet
+    headerBottom: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: 10,
+        marginBottom: 5,
+    },
+
+    deleteButton: {
+        position: 'absolute',
+        backgroundColor: 'red',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        width: 80,
+        right: 0,
+        bottom: 0,
+        top: 1,
+        zIndex: -1,
     },
 });
 

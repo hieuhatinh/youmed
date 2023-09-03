@@ -15,7 +15,6 @@ import {Provider} from 'react-redux';
 import store from './redux/store';
 import HeaderStore from './component/Header/Store/HeaderStore';
 import HeaderSeeMore from './component/Header/HeaderSeeMore';
-import HeaderProductDetail from './component/Header/HeaderProductDetail';
 import StoreScreen from './screen/Store';
 import SearchProductScreen from './screen/SearchProduct';
 import ProductDetailScreen from './screen/ProductDetail';
@@ -27,16 +26,14 @@ import PrescriptionConsultScreen from './screen/Store/PrescriptionConsultation';
 import HeaderShop from './component/Header/HeaderShop';
 import ShopScreen from './screen/Shop';
 import ReviewScreen from './screen/Review';
-// import {Animated} from 'react-native';
-
-// const AnimatedHeaderBackground =
-//     Animated.createAnimatedComponent(HeaderProductDetail);
-
+import Filter from './screen/Filter';
 const Stack = createNativeStackNavigator();
 
-// 1. code xong productDetail -> còn phần header
 // 2. code giao diện khi click vào 3 ô ở 'tư vấn đơn thuốc' -> còn tải ảnh lên, kiểm tra tính đúng của input
-// 3. giao diện giỏ hàng -> lỗi phần bottom
+// 3. giao diện filter -> logic filter
+// 7. button xoá 1 sản phẩm ra khỏi giỏ hàng -> xử lý khi click
+// 5. logic khi kéo xuống thì loading tải thêm sách, loading lại trang
+// 1. làm 1 component icon cart
 
 function App(): JSX.Element {
     return (
@@ -68,11 +65,6 @@ function App(): JSX.Element {
                             <Stack.Screen
                                 name="ProductDetailScreen"
                                 component={ProductDetailScreen}
-                                options={{
-                                    // header: HeaderProductDetail,
-                                    // headerTransparent: true,
-                                    headerShown: false,
-                                }}
                             />
                             <Stack.Screen
                                 name="OtherProductsScreen"
@@ -103,6 +95,13 @@ function App(): JSX.Element {
                             <Stack.Screen
                                 name="ReviewScreen"
                                 component={ReviewScreen}
+                                options={{
+                                    header: HeaderSeeMore,
+                                }}
+                            />
+                            <Stack.Screen
+                                name="Filter"
+                                component={Filter}
                                 options={{
                                     header: HeaderSeeMore,
                                 }}

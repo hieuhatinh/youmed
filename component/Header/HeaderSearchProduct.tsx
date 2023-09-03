@@ -4,24 +4,30 @@ import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import stylesGlobal from '../../assets/styles/global';
 import {getText} from '../../redux/selector';
+import {transmissionText} from '../../sliceReducer/storeSlice';
 
 const HeaderSearchProduct = () => {
     const textPlaceholder = useSelector(getText);
     const navigation = useNavigation();
+    const dispatch = useDispatch<any>();
 
     const handlePressGoback = () => {
         navigation.goBack();
+    };
+
+    const handlePressFilter = () => {
+        dispatch(transmissionText('Lọc kết quả'));
     };
 
     return (
         <View
             style={StyleSheet.flatten([
                 stylesGlobal.backgroundColorPrimary,
-                stylesGlobal.headerHigh,
+                stylesGlobal.headerHeight,
                 styles.header,
             ])}>
             <Icon
@@ -43,6 +49,7 @@ const HeaderSearchProduct = () => {
                 color="#fff"
                 name="filter"
                 size={25}
+                onPress={handlePressFilter}
             />
         </View>
     );

@@ -58,6 +58,17 @@ export const listProduct: IProduct[] = [
         star: 4,
         sold: 40,
     },
+    {
+        id: '6',
+        uri: 'https://kemembe.com/wp-content/themes/yootheme/cache/69/18-1-691508c5.png',
+        name: 'Viên uống dưỡng trắng, làm căng bóng da Wacos Cerepron hộp 60 viên',
+        price: 875000,
+        oldPrice: 920000,
+        percentDiscount: 10,
+        origin: 'Tây Ban Nha',
+        star: 4,
+        sold: 40,
+    },
 ];
 
 export const productsCart = [
@@ -94,7 +105,7 @@ export const productsCart = [
         store: 'Bwell Official Store',
         data: [
             {
-                id: '1',
+                id: '3',
                 uri: 'https://kemembe.com/wp-content/themes/yootheme/cache/69/18-1-691508c5.png',
                 name: 'Viên uống dưỡng trắng, làm căng bóng da Wacos Cerepron hộp 60 viên',
                 price: 875000,
@@ -105,7 +116,7 @@ export const productsCart = [
                 sold: 32,
             },
             {
-                id: '2',
+                id: '4',
                 uri: 'https://kemembe.com/wp-content/themes/yootheme/cache/69/18-1-691508c5.png',
                 name: 'Viên uống dưỡng trắng, làm căng bóng da Wacos Cerepron hộp 60 viên',
                 price: 875000,
@@ -116,7 +127,7 @@ export const productsCart = [
                 sold: 500,
             },
             {
-                id: '3',
+                id: '5',
                 uri: 'https://kemembe.com/wp-content/themes/yootheme/cache/69/18-1-691508c5.png',
                 name: 'Viên uống dưỡng trắng, làm căng bóng da Wacos Cerepron hộp 60 viên',
                 price: 875000,

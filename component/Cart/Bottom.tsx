@@ -4,7 +4,6 @@
 import React, {useCallback, useMemo, useRef} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import {
     BottomSheetBackdrop,
     BottomSheetModal,
@@ -57,7 +56,7 @@ const Bottom = () => {
                                 stylesGlobal.colorPrimary,
                                 styles.price,
                             ])}>
-                            5.995.000đ
+                            5.995.000 đ
                         </Text>
                     </View>
                     <View
@@ -79,7 +78,7 @@ const Bottom = () => {
                                     {color: '#FFCC00'},
                                     styles.price,
                                 ])}>
-                                -15.000đ
+                                -15.000 đ
                             </Text>
                             <Icon name="chevron-up" size={16} />
                         </TouchableOpacity>

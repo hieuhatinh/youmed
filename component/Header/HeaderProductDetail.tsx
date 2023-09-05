@@ -7,6 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 import stylesGlobal from '../../assets/styles/global';
 import {transmissionText} from '../../sliceReducer/storeSlice';
 import {useDispatch} from 'react-redux';
+import IconCart from '../Button/IconCart';
 
 interface IPropsHeaderProductDetail {
     title: string;
@@ -38,7 +39,7 @@ const HeaderProductDetail = (props: IPropsHeaderProductDetail) => {
 
     const iconBackgroundColor = scrollY.interpolate({
         inputRange: [0, 60],
-        outputRange: ['#ccc', 'transparent'],
+        outputRange: ['#DDDDDD', 'transparent'],
         extrapolate: 'clamp',
     });
 
@@ -87,10 +88,8 @@ const HeaderProductDetail = (props: IPropsHeaderProductDetail) => {
                         },
                         styles.icon,
                     ])}>
-                    <Icon
-                        name="cart-outline"
-                        size={25}
-                        style={StyleSheet.flatten([
+                    <IconCart
+                        styleIcon={StyleSheet.flatten([
                             stylesGlobal.colorPrimary,
                             styles.iconTransparentHeader,
                         ])}

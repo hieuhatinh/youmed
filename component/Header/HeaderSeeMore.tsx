@@ -1,15 +1,24 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import stylesGlobal from '../../assets/styles/global';
 import {getText} from '../../redux/selector';
+import {filteredValue} from '../../sliceReducer/storeSlice';
 
-const HeaderSeeMore = () => {
+interface IPropsHeader {
+    text?: any;
+}
+
+const HeaderSeeMore = (props: IPropsHeader) => {
+    const {text} = props;
+
     const navigation = useNavigation<any>();
+    const dispatch = useDispatch<any>();
 
     const handlePressGoback = () => {
         navigation.goBack('StoreScreen');
@@ -18,11 +27,15 @@ const HeaderSeeMore = () => {
     // redux-toolkit -> storeSlice
     const title = useSelector(getText);
 
+    const handleRemoveFilter = () => {
+        dispatch(filteredValue({origin: '', evaluate: ''}));
+    };
+
     return (
         <View
             style={StyleSheet.flatten([
                 stylesGlobal.backgroundColorPrimary,
-                stylesGlobal.headerHigh,
+                stylesGlobal.headerHeight,
                 styles.container,
             ])}>
             <Icon
@@ -32,6 +45,13 @@ const HeaderSeeMore = () => {
                 onPress={handlePressGoback}
             />
             <Text style={styles.title}>{title}</Text>
+            {text?.length > 0 && (
+                <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={handleRemoveFilter}>
+                    <Text style={{color: 'white', fontSize: 16}}>{text}</Text>
+                </TouchableOpacity>
+            )}
         </View>
     );
 };

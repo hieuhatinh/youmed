@@ -1,25 +1,36 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+
 import stylesGlobal from '../../assets/styles/global';
 
 interface IPropsButton {
     text: string;
     disabled?: boolean;
+    handleDispatchFilter: () => void;
 }
 
 const Button = (props: IPropsButton) => {
-    const {text, disabled} = props;
+    const {text, disabled, handleDispatchFilter} = props;
 
     return (
         <TouchableOpacity
             activeOpacity={0.9}
             disabled={disabled}
             style={StyleSheet.flatten([
-                stylesGlobal.backgroundColorPrimary,
+                disabled
+                    ? {backgroundColor: '#e2e8f0'}
+                    : stylesGlobal.backgroundColorPrimary,
                 styles.button,
-            ])}>
-            <Text style={styles.textButton}>{text}</Text>
+            ])}
+            onPress={handleDispatchFilter}>
+            <Text
+                style={StyleSheet.flatten([
+                    styles.textButton,
+                    {color: disabled ? '#71717a' : 'white'},
+                ])}>
+                {text}
+            </Text>
         </TouchableOpacity>
     );
 };

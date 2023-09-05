@@ -1,20 +1,28 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useRef, useEffect} from 'react';
-import {FlatList, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import React, {useRef, useEffect, useState} from 'react';
+import {
+    FlatList,
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    View,
+    Animated,
+} from 'react-native';
+import ContentLoader, {Rect} from 'react-content-loader/native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import stylesGlobal from '../../assets/styles/global';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import HeaderSection from '../../component/Header/HeaderSection';
 import ProductHorizontal from '../../component/Products/ProductsHorizontal';
 import Divider from '../../component/Divider';
-import {Animated} from 'react-native';
 import HeaderProductDetail from '../../component/Header/HeaderProductDetail';
 import Bottom from '../../component/ProductDetail/Bottom';
 import Shop from '../../component/ProductDetail/Shop';
 import ProductInfo from '../../component/ProductDetail/ProductInfo';
 import ReviewProduct from '../../component/ProductDetail/Review';
+import {Dimensions} from 'react-native';
 
 const listOther = [
     {
@@ -44,9 +52,12 @@ const listOther = [
     },
 ];
 
+const screen = Dimensions.get('window');
+
 const ProductDetailScreen = ({navigation}: any) => {
-    // header
+    // header opacity
     const scrollY = useRef(new Animated.Value(0)).current;
+    const [loading, setLoading] = useState<boolean>(false);
 
     const opacity: Animated.AnimatedInterpolation<number> = scrollY.interpolate(
         {
@@ -59,7 +70,7 @@ const ProductDetailScreen = ({navigation}: any) => {
     useEffect(() => {
         navigation.setOptions({
             headerStyle: {
-                opacity: 0, // Set opacity to 0 to make header transparent
+                opacity: 0,
             },
             headerBackground: () => null,
             headerTransparent: true,
@@ -67,17 +78,103 @@ const ProductDetailScreen = ({navigation}: any) => {
                 <HeaderProductDetail
                     title="Sữa bột FontActiv Complete - Dinh dưỡng cho người ốm yếu và mệt mỏi"
                     opacity={opacity}
-                    scrollY={scrollY} // Add a prop to hide the title
+                    scrollY={scrollY}
                 />
             ),
         });
     }, [opacity, navigation, scrollY]);
 
+    // loading
+    useEffect(() => {
+        setLoading(true);
+        const timoutId = setTimeout(() => {
+            setLoading(false);
+        }, 1000);
+
+        return () => clearTimeout(timoutId);
+    }, []);
+
+    if (loading) {
+        return (
+            <View
+                style={{
+                    height: '100%',
+                    backgroundColor: 'white',
+                }}>
+                <ContentLoader style={{padding: 10}}>
+                    <Rect
+                        x="0"
+                        y="0"
+                        rx="4"
+                        ry="4"
+                        width={screen.width}
+                        height={screen.height / 2}
+                    />
+                    <Rect
+                        x="10"
+                        y={screen.height / 2 + 10}
+                        rx="5"
+                        ry="5"
+                        width={screen.width}
+                        height="30"
+                    />
+                    <Rect
+                        x="10"
+                        y={screen.height / 2 + 50}
+                        rx="5"
+                        ry="5"
+                        width="200"
+                        height="20"
+                    />
+                    <Rect
+                        x="10"
+                        y={screen.height / 2 + 80}
+                        rx="5"
+                        ry="5"
+                        width={screen.width}
+                        height="60"
+                    />
+                    {/* <ContentLoader
+                        // ${screen.height / 2 + 150}
+                        viewBox={`0 0 ${screen.width} 50`}>
+                        <Rect
+                            x="0"
+                            y="0"
+                            rx="5"
+                            ry="5"
+                            width="70"
+                            height="70"
+                        />
+                        <Rect
+                            x="80"
+                            y="17"
+                            rx="4"
+                            ry="4"
+                            width="300"
+                            height="13"
+                        />
+                        <Rect
+                            x="80"
+                            y="40"
+                            rx="3"
+                            ry="3"
+                            width="250"
+                            height="10"
+                        />
+                    </ContentLoader> */}
+                </ContentLoader>
+            </View>
+        );
+    }
+
     return (
         <SafeAreaView>
             <Animated.ScrollView
                 showsVerticalScrollIndicator={false}
-                style={{position: 'relative', bottom: 45}}
+                style={{
+                    position: 'relative',
+                    bottom: 45,
+                }}
                 onScroll={Animated.event(
                     [
                         {

@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useState, useEffect} from 'react';
 import {
     SafeAreaView,
@@ -13,114 +12,93 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import {RadioButton} from 'react-native-radio-buttons-group';
+import {useDispatch, useSelector} from 'react-redux';
 
 import stylesGlobal from '../../assets/styles/global';
 import Divider from '../../component/Divider';
 import Button from '../../component/Button';
-
-// interface IPressValue {
-//     origin: string;
-//     evaluate: string;
-// }
+import {filteredValue} from '../../sliceReducer/storeSlice';
+import HeaderSeeMore from '../../component/Header/HeaderSeeMore';
+import {useNavigation} from '@react-navigation/native';
 
 const origin = [
     {
-        id: '1',
         label: 'Tất cả',
         value: 'all',
     },
     {
-        id: '2',
         label: 'Việt Nam',
         value: 'vietnam',
     },
     {
-        id: '3',
         label: 'Mỹ',
         value: 'america',
     },
     {
-        id: '4',
         label: 'Pháp',
         value: 'france',
     },
     {
-        id: '5',
         label: 'Nhật Bản',
         value: 'japan',
     },
     {
-        id: '6',
         label: 'Hàn Quốc',
         value: 'korea',
     },
     {
-        id: '7',
         label: 'Ấn Độ',
         value: 'India',
     },
     {
-        id: '8',
         label: 'Đức',
         value: 'germany',
     },
     {
-        id: '9',
         label: 'Hà Lan',
         value: 'netherlands',
     },
     {
-        id: '10',
         label: 'Hungary',
         value: 'hungary',
     },
     {
-        id: '11',
         label: 'Hy Lạp',
         value: 'greek',
     },
     {
-        id: '12',
         label: 'Thụy Điển',
         value: 'sweden',
     },
     {
-        id: '13',
         label: 'Trung Quốc',
         value: 'china',
     },
     {
-        id: '14',
         label: 'Indoneia',
         value: 'indonesia',
     },
     {
-        id: '15',
         label: 'Puerto Rico',
         value: 'puertoRico',
     },
     {
-        id: '16',
         label: 'Slovenia',
         value: 'slovenia',
     },
     {
-        id: '17',
         label: 'Tây Ban Nha',
         value: 'spain',
     },
     {
-        id: '18',
         label: 'Thổ Nhĩ Kỳ',
         value: 'turkey',
     },
     {
-        id: '19',
         label: 'Thụy Sỹ',
         value: 'switzerland',
     },
     {
-        id: '20',
         label: 'Úc',
         value: 'australia',
     },
@@ -128,50 +106,94 @@ const origin = [
 
 const evaluates = [
     {
-        id: '1',
         label: 'Tất cả',
         value: 'all',
     },
     {
-        id: '2',
         label: 'Từ 5 sao',
         value: 'five-star',
     },
     {
-        id: '3',
         label: 'Từ 4 sao',
         value: 'four-star',
     },
     {
-        id: '4',
         label: 'Từ 3 sao',
         value: 'three-star',
     },
     {
-        id: '5',
         label: 'Từ 2 sao',
         value: 'two-star',
     },
     {
-        id: '6',
         label: 'Từ 1 sao',
         value: 'one-star',
     },
 ];
 
 const Filter = () => {
+    const dispatch = useDispatch<any>();
+    const navigation = useNavigation<any>();
+
+    // xử lý filter
+    const filtered = useSelector((state: any) => state.store.filtered);
+    const [text, setText] = useState<string>('');
+    const [changeSelected, setChangeSelected] = useState<boolean>(false);
+
     const [pressOriginValue, setOriginPressValue] = useState<string>(
-        origin[0].value,
+        filtered.origin || origin[0].value,
     );
     const [pressEvaluatesValue, setEvaluatesPressValue] = useState<string>(
-        evaluates[0].value,
+        filtered.evaluate || evaluates[0].value,
     );
 
-    const [isDisabled, setIsDisabled] = useState<boolean>(true);
-    // const [pressValue, setPressValue] = useState<IPressValue>({
-    //     origin: origin[0].value,
-    //     evaluate: evaluates[0].value,
-    // });
+    const handleChangeOrigin = (value: string) => {
+        setOriginPressValue(value);
+        if (pressOriginValue !== value) {
+            setChangeSelected(true);
+        } else {
+            setChangeSelected(false);
+        }
+    };
+
+    const handleChangeEvaluate = (value: string) => {
+        setEvaluatesPressValue(value);
+        if (pressEvaluatesValue !== value) {
+            setChangeSelected(true);
+        } else {
+            setChangeSelected(false);
+        }
+    };
+
+    const handleDispatchFilter = () => {
+        dispatch(
+            filteredValue({
+                origin: pressOriginValue,
+                evaluate: pressEvaluatesValue,
+            }),
+        );
+        navigation.goBack();
+    };
+
+    // quyết định hiện button 'bỏ lọc'
+    useEffect(() => {
+        if (
+            changeSelected ||
+            filtered.origin.length > 0 ||
+            filtered.evaluate.length > 0
+        ) {
+            setText('Bỏ lọc');
+        }
+    }, [filtered, changeSelected, dispatch]);
+
+    // disabled button
+    const disabled = () => {
+        if (changeSelected) {
+            return false;
+        }
+
+        return true;
+    };
 
     // xem tất cả nơi xuất xứ
     const [seeAllOrigin, setSeeAllOrigin] = useState({
@@ -193,48 +215,16 @@ const Filter = () => {
         }
     };
 
-    useEffect(() => {
-        // Đọc giá trị pressId từ AsyncStorage khi vào lại ứng dụng
-        const getPressId = async () => {
-            try {
-                const result: any = await AsyncStorage.getItem('FilterValue');
-                const value = JSON.parse(result);
-                if (value !== null) {
-                    setOriginPressValue(value.pressOriginValue);
-                    setEvaluatesPressValue(value.pressEvaluatesValue);
-                }
-            } catch (e) {
-                // Lỗi đọc giá trị
-            }
-        };
-        getPressId();
-    }, []);
-
-    // useEffect(() => {
-    //     // Lưu giá trị pressId vào AsyncStorage khi thay đổi
-    //     const storePressId = async (value: any) => {
-    //         try {
-    //             await AsyncStorage.setItem(
-    //                 'FilterValue',
-    //                 JSON.stringify(value),
-    //             );
-    //         } catch (e) {
-    //             // Lỗi lưu giá trị
-    //         }
-    //     };
-    //     storePressId({pressOriginValue, pressEvaluatesValue});
-    // }, [pressOriginValue, pressEvaluatesValue]);
-
-    useEffect(() => {
-        setIsDisabled(!isDisabled);
-    }, [pressOriginValue, pressEvaluatesValue, isDisabled]);
-
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{height: '100%'}}>
+            <HeaderSeeMore text={text} />
             <ScrollView
-                style={{backgroundColor: 'white'}}
-                nestedScrollEnabled
-                showsVerticalScrollIndicator={false}>
+                style={{
+                    backgroundColor: 'white',
+                    marginBottom: 60,
+                }}
+                showsVerticalScrollIndicator={false}
+                nestedScrollEnabled={true}>
                 <View>
                     <Text
                         style={StyleSheet.flatten([
@@ -245,7 +235,7 @@ const Filter = () => {
                     </Text>
                     <View style={styles.origin}>
                         <FlatList
-                            nestedScrollEnabled
+                            scrollEnabled={false}
                             ItemSeparatorComponent={({leadingItem}) => {
                                 // Kiểm tra nếu item không phải là cuối cùng
                                 if (leadingItem !== origin[origin.length - 1]) {
@@ -257,17 +247,13 @@ const Filter = () => {
                             data={origin.slice(0, seeAllOrigin.numberButton)}
                             renderItem={({item}) => (
                                 <RadioButton
-                                    key={item.id}
-                                    id={item.id}
+                                    key={item.value}
+                                    id={item.value}
                                     label={item.label}
                                     value={item.value}
-                                    selected={
-                                        pressOriginValue === item.value
-                                            ? true
-                                            : false
-                                    }
+                                    selected={pressOriginValue === item.value}
                                     onPress={() =>
-                                        setOriginPressValue(item.value)
+                                        handleChangeOrigin(item.value)
                                     }
                                     size={16}
                                     color="#0066FF"
@@ -302,20 +288,16 @@ const Filter = () => {
                         Đánh giá
                     </Text>
                     <FlatList
-                        nestedScrollEnabled
+                        scrollEnabled={false}
                         data={evaluates}
                         renderItem={({item}) => (
                             <RadioButton
-                                key={item.id}
-                                id={item.id}
+                                key={item.value}
+                                id={item.value}
                                 label={item.label}
                                 value={item.value}
-                                selected={
-                                    pressEvaluatesValue === item.id
-                                        ? true
-                                        : false
-                                }
-                                onPress={() => setEvaluatesPressValue(item.id)}
+                                selected={pressEvaluatesValue === item.value}
+                                onPress={() => handleChangeEvaluate(item.value)}
                                 size={16}
                                 containerStyle={{
                                     borderWidth: 1,
@@ -327,7 +309,7 @@ const Filter = () => {
                                 }}
                                 color="#0066FF"
                                 borderColor={
-                                    pressEvaluatesValue === item.id
+                                    pressEvaluatesValue === item.value
                                         ? '#0066FF'
                                         : '#ccc'
                                 }
@@ -343,10 +325,21 @@ const Filter = () => {
                         }}
                     />
                 </View>
-
-                <Divider />
-                <Button text="Áp dụng" disabled={isDisabled} />
             </ScrollView>
+            <View
+                style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    right: 0,
+                    left: 0,
+                    backgroundColor: 'white',
+                }}>
+                <Button
+                    text="Áp dụng"
+                    disabled={disabled()}
+                    handleDispatchFilter={handleDispatchFilter}
+                />
+            </View>
         </SafeAreaView>
     );
 };

@@ -24,13 +24,13 @@ const storeSlice = createSlice({
         transmissionText: (state, action) => {
             state.text = action.payload;
         },
-        filtered: (state, action) => {
+        filteredValue: (state, action) => {
             state.filtered.origin = action.payload.origin;
             state.filtered.evaluate = action.payload.evaluate;
         },
     },
 });
 
-export const {transmissionText} = storeSlice.actions;
+export const {transmissionText, filteredValue} = storeSlice.actions;
 
 export default storeSlice.reducer;

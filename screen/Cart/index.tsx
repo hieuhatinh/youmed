@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useRef} from 'react';
+import React, {useState} from 'react';
 import {
     View,
     Text,
@@ -17,19 +18,26 @@ import {productsCart} from '../../fakeData/products';
 import Bottom from '../../component/Cart/Bottom';
 
 const CartScreen = () => {
-    const swipeRowRef = useRef<any>(null);
+    const [dataProduct, setDataProduct] = useState(productsCart);
 
-    const onRowDidOpen = () => {
-        // close the row after 1 second
-        setTimeout(() => {
-            swipeRowRef.current.closeRow();
-        }, 1000);
+    const handlePressDelete = (rowMap: any, item: any) => {
+        setDataProduct(productsCart =>
+            productsCart.map(section => {
+                if (section.id === item.section.id) {
+                    return {
+                        ...section,
+                        data: section.data.filter(
+                            product => product.id !== item.item.id,
+                        ),
+                    };
+                }
+                return section;
+            }),
+        );
     };
 
-    const handlePressDelete = (rowMap, idItem) => {};
-
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{height: '100%'}}>
             <ScrollView
                 style={{
                     marginBottom: 10,
@@ -39,7 +47,8 @@ const CartScreen = () => {
                 <View style={{marginBottom: 80, backgroundColor: 'white'}}>
                     <SwipeListView
                         useSectionList
-                        sections={productsCart}
+                        sections={dataProduct}
+                        keyExtractor={item => item.id}
                         renderSectionHeader={({section: {store}}) => (
                             <Text
                                 style={StyleSheet.flatten([
@@ -49,7 +58,7 @@ const CartScreen = () => {
                                 {store}
                             </Text>
                         )}
-                        renderItem={(data: any, rowMap: any) => (
+                        renderItem={(data: any) => (
                             <CardProduct product={data.item} />
                         )}
                         renderHiddenItem={(rowData, rowMap) => (
@@ -57,7 +66,7 @@ const CartScreen = () => {
                                 activeOpacity={0.9}
                                 style={styles.deleteButton}
                                 onPress={() =>
-                                    handlePressDelete(rowMap, rowData.item)
+                                    handlePressDelete(rowMap, rowData)
                                 }>
                                 <Text
                                     style={{
@@ -69,17 +78,18 @@ const CartScreen = () => {
                                 </Text>
                             </TouchableOpacity>
                         )}
-                        onRowOpen={(secId: any, rowId: any, rowMap: any) => {
+                        onRowOpen={(rowKey, rowMap) => {
                             setTimeout(() => {
-                                rowMap[`${secId}${rowId}`].closeRow();
+                                if (rowMap[rowKey]) {
+                                    rowMap[rowKey].closeRow();
+                                }
                             }, 3000);
                         }}
+                        closeOnRowOpen={false}
+                        stopRightSwipe={-80}
                         rightOpenValue={-80}
                         disableRightSwipe
                         scrollEnabled={false}
-                        previewRowKey={'0'}
-                        previewOpenValue={0}
-                        previewOpenDelay={3000}
                         nestedScrollEnabled
                     />
                 </View>

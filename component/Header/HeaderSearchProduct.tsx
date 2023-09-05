@@ -1,27 +1,42 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import React, {useEffect} from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 
 import stylesGlobal from '../../assets/styles/global';
-import {getText} from '../../redux/selector';
+import {getFilteredValue, getText} from '../../redux/selector';
 import {transmissionText} from '../../sliceReducer/storeSlice';
 
 const HeaderSearchProduct = () => {
-    const textPlaceholder = useSelector(getText);
-    const navigation = useNavigation();
+    const navigation = useNavigation<any>();
     const dispatch = useDispatch<any>();
+    const isFocused = useIsFocused();
+
+    const textPlaceholder = useSelector(getText);
+    const filteredValue = useSelector(getFilteredValue);
 
     const handlePressGoback = () => {
         navigation.goBack();
     };
 
     const handlePressFilter = () => {
+        navigation.navigate('Filter');
         dispatch(transmissionText('Lọc kết quả'));
     };
+
+    // lấy filter value
+    console.log(filteredValue);
+    useEffect(() => {
+        if (
+            isFocused &&
+            filteredValue.origin.length > 0 &&
+            filteredValue.evaluate.length > 0
+        ) {
+        }
+    }, [filteredValue, isFocused]);
 
     return (
         <View
@@ -44,13 +59,29 @@ const HeaderSearchProduct = () => {
                     placeholderTextColor="#E8E8E8"
                 />
             </View>
-            <Icon
-                style={styles.iconSearch}
-                color="#fff"
-                name="filter"
-                size={25}
-                onPress={handlePressFilter}
-            />
+            <View style={{position: 'relative'}}>
+                <Icon
+                    style={styles.iconSearch}
+                    color="#fff"
+                    name="filter"
+                    size={25}
+                    onPress={handlePressFilter}
+                />
+                {filteredValue.origin.length > 0 &&
+                    filteredValue.evaluate.length > 0 && (
+                        <View
+                            style={{
+                                position: 'absolute',
+                                left: 10,
+                                bottom: 5,
+                                height: 10,
+                                width: 10,
+                                borderRadius: 5,
+                                backgroundColor: 'red',
+                            }}
+                        />
+                    )}
+            </View>
         </View>
     );
 };

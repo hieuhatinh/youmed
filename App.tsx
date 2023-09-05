@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 /**
  * Sample React Native App
@@ -11,15 +12,13 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 import store from './redux/store';
-import HeaderStore from './component/Header/Store/HeaderStore';
-import HeaderSeeMore from './component/Header/HeaderSeeMore';
 import StoreScreen from './screen/Store';
 import SearchProductScreen from './screen/SearchProduct';
 import ProductDetailScreen from './screen/ProductDetail';
 import OtherProductsScreen from './screen/ProductDetail/OtherProducts';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import CartScreen from './screen/Cart';
 import PartnerScreen from './screen/Store/Partner';
 import PrescriptionConsultScreen from './screen/Store/PrescriptionConsultation';
@@ -27,13 +26,12 @@ import HeaderShop from './component/Header/HeaderShop';
 import ShopScreen from './screen/Shop';
 import ReviewScreen from './screen/Review';
 import Filter from './screen/Filter';
+import Search from './screen/Search';
+import HeaderSeeMore from './component/Header/HeaderSeeMore';
 const Stack = createNativeStackNavigator();
 
-// 2. code giao diện khi click vào 3 ô ở 'tư vấn đơn thuốc' -> còn tải ảnh lên, kiểm tra tính đúng của input
 // 3. giao diện filter -> logic filter
-// 7. button xoá 1 sản phẩm ra khỏi giỏ hàng -> xử lý khi click
-// 5. logic khi kéo xuống thì loading tải thêm sách, loading lại trang
-// 1. làm 1 component icon cart
+// 1. làm trang chờ loading
 
 function App(): JSX.Element {
     return (
@@ -46,14 +44,18 @@ function App(): JSX.Element {
                                 name="StoreScreen"
                                 component={StoreScreen}
                                 options={{
-                                    header: HeaderStore,
-                                    // headerShown: false,
+                                    headerShown: false,
                                 }}
+                            />
+                            <Stack.Screen
+                                name="Search"
+                                component={Search}
+                                options={{headerShown: false}}
                             />
                             <Stack.Screen
                                 name="PartnerScreen"
                                 component={PartnerScreen}
-                                options={{header: HeaderSeeMore}}
+                                options={{header: () => <HeaderSeeMore />}}
                             />
                             <Stack.Screen
                                 name="SearchProductScreen"
@@ -69,20 +71,19 @@ function App(): JSX.Element {
                             <Stack.Screen
                                 name="OtherProductsScreen"
                                 component={OtherProductsScreen}
-                                options={{header: HeaderSeeMore}}
+                                options={{header: () => <HeaderSeeMore />}}
                             />
                             <Stack.Screen
                                 name="CartScreen"
                                 component={CartScreen}
                                 options={{
-                                    header: HeaderSeeMore,
-                                    // headerShown: false,
+                                    header: () => <HeaderSeeMore />,
                                 }}
                             />
                             <Stack.Screen
                                 name="PrescriptionConsultScreen"
                                 component={PrescriptionConsultScreen}
-                                options={{header: HeaderSeeMore}}
+                                options={{header: () => <HeaderSeeMore />}}
                             />
                             <Stack.Screen
                                 name="ShopScreen"
@@ -96,14 +97,15 @@ function App(): JSX.Element {
                                 name="ReviewScreen"
                                 component={ReviewScreen}
                                 options={{
-                                    header: HeaderSeeMore,
+                                    header: () => <HeaderSeeMore />,
                                 }}
                             />
                             <Stack.Screen
                                 name="Filter"
                                 component={Filter}
                                 options={{
-                                    header: HeaderSeeMore,
+                                    // header: HeaderSeeMore,
+                                    headerShown: false,
                                 }}
                             />
                         </Stack.Navigator>

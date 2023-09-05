@@ -1,21 +1,67 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-
-import stylesGlobal from '../../assets/styles/global';
+import React, {useState} from 'react';
+import {Image, StyleSheet, Text, View, Dimensions} from 'react-native';
+import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import stylesGlobal from '../../assets/styles/global';
+
+const win = Dimensions.get('window');
+
+interface ImageItem {
+    id: string;
+    uri: string;
+}
+
+const listImage = [
+    {
+        id: '1',
+        uri: 'https://cdn.thuvienphapluat.vn/uploads/tintuc/2022/01/10/thuoc-gia.png',
+    },
+    {
+        id: '2',
+        uri: 'https://cdn.thuvienphapluat.vn/uploads/tintuc/2022/01/10/thuoc-gia.png',
+    },
+    {
+        id: '3',
+        uri: 'https://cdn.thuvienphapluat.vn/uploads/tintuc/2022/01/10/thuoc-gia.png',
+    },
+    {
+        id: '4',
+        uri: 'https://cdn.thuvienphapluat.vn/uploads/tintuc/2022/01/10/thuoc-gia.png',
+    },
+];
+
 const ProductInfo = () => {
+    const [indexImg, setIndexImg] = useState(0);
+
     return (
         <View style={styles.productInfo}>
-            <Image
-                source={{
-                    uri: 'https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2022/8/30/uong-thuoc-thoi-diem-nao-16618466465071926930931.png',
-                }}
-                height={300}
-                resizeMode="cover"
-            />
+            {/* slice ảnh */}
+            <View style={styles.viewSliceImg}>
+                <SwiperFlatList
+                    index={0}
+                    data={listImage}
+                    renderItem={({item}) => (
+                        <Image
+                            source={{
+                                uri: item.uri,
+                            }}
+                            height={300}
+                            width={win.width}
+                            resizeMode="cover"
+                        />
+                    )}
+                    keyExtractor={(item: ImageItem) => item.id}
+                    onChangeIndex={({index}) => setIndexImg(index)}
+                />
+                <View style={styles.numberImg}>
+                    <Text style={styles.textNumber}>
+                        {indexImg + 1} / {listImage.length.toString()}
+                    </Text>
+                </View>
+            </View>
             <View style={{padding: 10}}>
                 <Text
                     style={StyleSheet.flatten([
@@ -138,6 +184,23 @@ const ProductInfo = () => {
 };
 
 const styles = StyleSheet.create({
+    // slice img
+    viewSliceImg: {
+        position: 'relative',
+    },
+    numberImg: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+        minWidth: 50,
+        minHeight: 20,
+        backgroundColor: '#f1f5f9',
+        borderRadius: 9999,
+        padding: 3,
+    },
+    textNumber: {
+        textAlign: 'center',
+    },
     // productInfo
     productInfo: {
         backgroundColor: 'white',

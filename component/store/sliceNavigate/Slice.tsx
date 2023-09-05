@@ -36,14 +36,15 @@ const Slice = () => {
                 showPagination
                 data={listImage}
                 renderItem={({item}) => (
-                    <Image
-                        source={{
-                            uri: item.uri,
-                        }}
-                        height={180}
-                        width={win.width * 0.9}
-                        style={styles.image}
-                    />
+                    <View style={{width: win.width}}>
+                        <Image
+                            source={{
+                                uri: item.uri,
+                            }}
+                            height={180}
+                            style={styles.image}
+                        />
+                    </View>
                 )}
                 paginationStyleItem={{
                     width: 8,
@@ -51,6 +52,7 @@ const Slice = () => {
                 }}
                 paginationActiveColor="#3366FF"
                 paginationDefaultColor="#fff"
+                scrollEnabled={true}
             />
         </View>
     );
@@ -66,6 +68,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         display: 'flex',
         marginHorizontal: 8,
+        // width: '100%',
+        flex: 1,
     },
     dots: {
         position: 'absolute',
